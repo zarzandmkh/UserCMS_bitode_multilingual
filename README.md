@@ -5,6 +5,7 @@ changes log <br />
 	languages are set in config.ini, also you need to set is_multilingual an default_language options. see example in config.php <br />
 	you need to create language directory in theme directory and language directories in it named as languages. <br />
 	in language directories you need to create language.php file with $data_language array which will contain variables with your language strings <br />
+	language can be set via POST[language_global] or GET[usercms_language] <br />
 	see example in themes/default directory <br />
 - added language attribute to menus so you can create various menus for each language <br />
 - multilingual options for other modules and components are being developed and will be uploaded soon (contact zmkhitaryan88@gmail.com for more info) <br />
