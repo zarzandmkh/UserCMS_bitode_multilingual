@@ -11,8 +11,7 @@ class core extends user_cms_core_edition {
 
 	function __construct(){
 		parent::__construct();
-		/*$language_directory = is_dir($this->theme['dir'] . '/language')?$this->theme['dir'] . '/language':(is_dir($this->theme['dir_core'] . '/language')?$this->theme['dir_core'] . '/language':'');
-		$this->languages = is_dir($language_directory)?array_values(array_diff(scandir($language_directory), array('.','..'))):array();*/
+
 		self::$languages = explode(',', $this->config['site_languages']);
 		
 		if(count(self::$languages) > 0 && $this->config['multilingual']){
@@ -27,12 +26,26 @@ class core extends user_cms_core_edition {
 
 		$this->language_global = !empty($_SESSION['LANGUAGE_GLOBAL'])?$_SESSION['LANGUAGE_GLOBAL']:$this->config['default_language'];
 
+		
+
 		if(!empty($_POST['language_global'])){
 			$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global = $_POST['language_global'];
-			header('Location: '.$_SERVER['REQUEST_URI']);
+			if(!empty($_GET['usercms_language']))$_GET['usercms_language'] = $_POST['language_global'];
+			if(!empty($_GET['usercms_language'])){
+				$location_url = SITE_URL . '?usercms_language=' . $_POST['language_global'];
+			}else{
+				$location_url = $_SERVER['REQUEST_URI'];
+			}
+			header('Location: '.$location_url);
 		}else{
-			$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global;
+			if(!empty($_GET['usercms_language']) AND in_array($_GET['usercms_language'], self::$languages)){
+				$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global = $_GET['usercms_language'];
+			}else{
+				$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global;
+			}	
 		}
+
+		
 
 		if(END_NAME == 'back_end') $this->language_global = $this->config['default_language'];
 
