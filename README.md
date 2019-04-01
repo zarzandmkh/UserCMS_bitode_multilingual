@@ -6,6 +6,9 @@ changes log <br />
 	you need to create language directory in theme directory and language directories in it named as languages. <br />
 	in language directories you need to create language.php file with $data_language array which will contain variables with your language strings <br />
 	language can be set via POST[language_global] or GET[usercms_language] <br />
+	system automatically detects user preferred language if user hasn't chosen language yet <br />
+	system saves users chosed language one month
+	admin panel language automatically changes to default. there is only russian for admin default theme for now
 	see example in themes/default directory <br />
 - added language attribute to menus so you can create various menus for each language <br />
 - multilingual options for other modules and components are being developed and will be uploaded soon (contact zmkhitaryan88@gmail.com for more info) <br />
