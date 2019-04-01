@@ -6,28 +6,45 @@
 */
 class core extends user_cms_core_edition {
 
-	static public $languages = array();
-	private $language_global;
+	static public $languages = array();													// list of languages
+	private $language_global;															// current site language
+	private $user_preferred_language;													// language which system automaticaly detects as users preferred
+	private $language_groups = array(													// language groups. if users preferred language is in group system automatically switch language to key language
+		'ru' => array('ru', 'uk', 'uz', 'az', 'hy', 'be', 'ka', 'kk', 'ky', 'tg')
 
+	);
 	function __construct(){
+
 		parent::__construct();
 
 		self::$languages = explode(',', $this->config['site_languages']);
-		
+		//detecting prferred language
+		$preferred_language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		//if user has alraedy chosen language system remembers it 
+		if(!empty($_COOKIE['usercms_language_chosen']))$_SESSION['usercms_language_chosen'] = $_COOKIE['usercms_language_chosen'];
+		// searching preferred language by group
+		foreach ($this->language_groups as $key => $language_group) {
+			if(in_array($preferred_language, $this->language_groups[$key])){
+				$this->user_preferred_language = $key;
+				break;
+			}else{
+				$this->user_preferred_language = '';
+			}
+		}
+		// if site is multilingual (defined in config.ini)
 		if(count(self::$languages) > 0 && $this->config['multilingual']){
 			define('IS_MULTILINGUAL', true);
 		}else{
 			define('IS_MULTILINGUAL', false);
 		}
-
+		// error if there is language in theme but default language is not chosen
 		if(count(self::$languages) > 0 && !$this->config['multilingual']){
 			if(empty($this->config['default_language']))exit('You chose single language mode, your theme has language options but you didn\'t set default language in config.ini. Please set default language or multilingual mode');
 		}
 
-		$this->language_global = !empty($_SESSION['LANGUAGE_GLOBAL'])?$_SESSION['LANGUAGE_GLOBAL']:$this->config['default_language'];
-
-		
-
+		// setting current language
+		$this->language_global = !empty($_SESSION['LANGUAGE_GLOBAL'])?$_SESSION['LANGUAGE_GLOBAL']:$this->config['default_language'];		
+		//switching language manually via form
 		if(!empty($_POST['language_global'])){
 			$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global = $_POST['language_global'];
 			if(!empty($_GET['usercms_language']))$_GET['usercms_language'] = $_POST['language_global'];
@@ -36,26 +53,35 @@ class core extends user_cms_core_edition {
 			}else{
 				$location_url = $_SERVER['REQUEST_URI'];
 			}
+			if(empty($_COOKIE['usercms_language_chosen']))$_SESSION['usercms_language_chosen'] = $_SESSION['LANGUAGE_GLOBAL'];
+			setcookie('usercms_language_chosen', $_SESSION['LANGUAGE_GLOBAL'], time()+2592000);
+
 			header('Location: '.$location_url);
-		}else{
+		}else{ // setting language by GET
 			if(!empty($_GET['usercms_language']) AND in_array($_GET['usercms_language'], self::$languages)){
 				$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global = $_GET['usercms_language'];
 			}else{
 				$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global;
 			}	
 		}
+		//if user has not chose language we set current language users preferred language
+		if(!empty($this->user_preferred_language) && empty($_SESSION['usercms_language_chosen'])) $_SESSION['LANGUAGE_GLOBAL'] = $this->language_global = $this->user_preferred_language;
 
-		
+		//if user has already chosen any language we set that
+		if(!empty($_SESSION['usercms_language_chosen']))$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global = $_SESSION['usercms_language_chosen'];
 
-		if(END_NAME == 'back_end') $this->language_global = $this->config['default_language'];
-
+		//if site is not multilingual we set default language as current
 		if(!IS_MULTILINGUAL){
 			$_SESSION['LANGUAGE_GLOBAL'] = $this->language_global = $this->config['default_language'];
 		}else{
 			//$_SESSION['LANGUAGE_GLOBAL'] = $this->languages[0];
 		}
 
-		define('LANGUAGE_GLOBAL', $_SESSION['LANGUAGE_GLOBAL']);
+		//if we are in admin panel we choose default language 
+		if(END_NAME == 'back_end' || !IS_MULTILINGUAL) $this->language_global = $this->config['default_language'];
+
+		// setting constant with current language
+		define('LANGUAGE_GLOBAL', $this->language_global);
 	}
 
 		function load_theme() {
@@ -93,7 +119,6 @@ class core extends user_cms_core_edition {
 	        include $theme['full_name_core'];	        
 	        $this->html = ob_get_clean();
 		}
-		// загружаем css и js файлы из конфига темы
 		
 		if (file_exists($theme['config'])) {
 			$config_file = $theme['config'];

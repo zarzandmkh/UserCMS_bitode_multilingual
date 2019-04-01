@@ -126,11 +126,11 @@ CREATE TABLE "menus" (
   "language" text NULL
 );
 
-INSERT INTO "menus" ("id", "name", "class", "language") VALUES (2,  'Главное меню админки', '', 'ru_ru');
-INSERT INTO "menus" ("id", "name", "class", "language") VALUES (4,  'Верхнее меню', 'nav navbar-nav top-menu', 'ru_ru');
-INSERT INTO "menus" ("id", "name", "class", "language") VALUES (7,  'Боковое меню', 'aside-menu', 'ru_ru');
-INSERT INTO "menus" ("id", "name", "class", "language") VALUES (8,  'Top menu', 'nav navbar-nav top-menu', 'en_en');
-INSERT INTO "menus" ("id", "name", "class", "language") VALUES (9,  'Aside menu', 'aside-menu', 'en_en');
+INSERT INTO "menus" ("id", "name", "class", "language") VALUES (2,  'Главное меню админки', '', 'ru');
+INSERT INTO "menus" ("id", "name", "class", "language") VALUES (4,  'Верхнее меню', 'nav navbar-nav top-menu', 'ru');
+INSERT INTO "menus" ("id", "name", "class", "language") VALUES (7,  'Боковое меню', 'aside-menu', 'ru');
+INSERT INTO "menus" ("id", "name", "class", "language") VALUES (8,  'Top menu', 'nav navbar-nav top-menu', 'en');
+INSERT INTO "menus" ("id", "name", "class", "language") VALUES (9,  'Aside menu', 'aside-menu', 'en');
 
 CREATE TABLE "menus_items" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
