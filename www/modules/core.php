@@ -19,7 +19,7 @@ class core extends user_cms_core_edition {
 
 		self::$languages = explode(',', $this->config['site_languages']);
 		//detecting prferred language
-		$preferred_language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		$preferred_language = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])?substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2):'';;
 		//if user has alraedy chosen language system remembers it 
 		if(!empty($_COOKIE['usercms_language_chosen']))$_SESSION['usercms_language_chosen'] = $_COOKIE['usercms_language_chosen'];
 		// searching preferred language by group
