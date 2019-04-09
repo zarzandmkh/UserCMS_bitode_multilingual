@@ -1,4 +1,4 @@
-# UserCMS_bitode_multilingual <br />
+# UserCMS_bitcode_multilingual <br />
 Multilingual edition of UserCMS_bitcode <br />
 changes log <br />
 - added multilingual mode. <br />
