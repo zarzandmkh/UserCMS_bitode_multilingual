@@ -2,7 +2,7 @@
 Multilingual edition of UserCMS_bitcode <br />
 changes log <br />
 - added multilingual mode. <br />
-	languages are set in config.ini, also you need to set is_multilingual an default_language options. see example in config.php <br />
+	languages are set in config.ini, also you need to set is_multilingual and default_language options. see example in config.php <br />
 	you need to create language directory in theme directory and language directories in it named as languages. <br />
 	in language directories you need to create language.php file with $data_language array which will contain variables with your language strings <br />
 	language can be set via POST[language_global] or GET[usercms_language] <br />
